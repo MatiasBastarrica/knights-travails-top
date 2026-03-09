@@ -1,4 +1,4 @@
-function getValidMoves(startVertex) {
+export function getValidMoves(startVertex) {
   let validMoves = [];
   let x = startVertex[0];
   let y = startVertex[1];
