@@ -41,3 +41,5 @@ export function getValidMoves(startVertex) {
 
   return validMoves;
 }
+
+function knightMoves(start, end) {}
