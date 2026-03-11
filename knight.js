@@ -38,4 +38,6 @@ export function getValidMoves(startVertex) {
       validMoves.push([x - 1, y - 2]);
     }
   }
+
+  return validMoves;
 }
