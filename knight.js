@@ -42,7 +42,7 @@ export function getValidMoves(startVertex) {
   return validMoves;
 }
 
-function knightMoves(start, end, visited = []) {
+export function knightMoves(start, end, visited = []) {
   let validMoves = getValidMoves(start);
 
   if (start[0] === end[0] && start[1] === end[1]) {
