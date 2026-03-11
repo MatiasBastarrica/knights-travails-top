@@ -1,3 +1,5 @@
+import { Queue } from "./queue.js";
+
 export function getValidMoves(startVertex) {
   let validMoves = [];
   let x = startVertex[0];
@@ -52,9 +54,11 @@ export function knightMoves(start, end, visited = []) {
 
   for (let i = 0; i < validMoves.length; i++) {
     const validMove = validMoves[i];
-    visited.push(validMove);
     if (!visited.includes(validMove)) {
+      visited.push(validMove);
       knightMoves(validMove, end, visited);
+    } else {
+      return;
     }
   }
 
