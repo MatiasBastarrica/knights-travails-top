@@ -57,20 +57,31 @@ export function getValidMoves(startVertex) {
 export function knightMoves(start, end, visited = []) {
   let validMoves = getValidMoves(start);
 
-  if (start[0] === end[0] && start[1] === end[1]) {
-    visited.push(start);
-    return visited;
-  }
+  let paths = [];
 
-  for (let i = 0; i < validMoves.length; i++) {
-    const validMove = validMoves[i];
-    if (!visited.includes(validMove)) {
-      visited.push(validMove);
-      knightMoves(validMove, end, visited);
-    } else {
-      return;
+  // if (start[0] === end[0] && start[1] === end[1]) {
+  //   visited.push(start);
+  //   return visited;
+  // }
+
+  while (!validMoves.isEmpty()) {
+    let move = validMoves.dequeue();
+    if (!visited.includes(String(move))) {
+      let path = [];
+      // paths.push(path);
+      visited.push(String(move));
+      path.push(move);
+      if (move[0] === end[0] && move[1] === end[1]) {
+        return path;
+      }
+      let nextMoves = knightMoves(move, end, visited);
+      path = [...path, ...nextMoves];
+      // paths.push(path);
+      // visited = [];
+      return path;
     }
   }
 
-  return visited;
+  return paths;
+  // return visited;
 }
