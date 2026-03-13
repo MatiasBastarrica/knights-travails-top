@@ -1,57 +1,57 @@
 import { Queue } from "./queue.js";
 
 export function getValidMoves(startVertex) {
-  let queue = new Queue();
-  // let validMoves = [];
+  // let queue = new Queue();
+  let validMoves = [];
   let x = startVertex[0];
   let y = startVertex[1];
 
   if (y + 2 <= 7) {
     if (x - 1 >= 0) {
-      // validMoves.push([x - 1, y + 2]);
-      queue.enqueue([x - 1, y + 2]);
+      validMoves.push([x - 1, y + 2]);
+      // queue.enqueue([x - 1, y + 2]);
     }
     if (x + 1 <= 7) {
-      // validMoves.push([x + 1, y + 2]);
-      queue.enqueue([x + 1, y + 2]);
+      validMoves.push([x + 1, y + 2]);
+      // queue.enqueue([x + 1, y + 2]);
     }
   }
 
   if (x + 2 <= 7) {
     if (y + 1 <= 7) {
-      // validMoves.push([x + 2, y + 1]);
-      queue.enqueue([x + 2, y + 1]);
+      validMoves.push([x + 2, y + 1]);
+      // queue.enqueue([x + 2, y + 1]);
     }
     if (y - 1 >= 0) {
-      // validMoves.push([x + 2, y - 1]);
-      queue.enqueue([x + 2, y - 1]);
+      validMoves.push([x + 2, y - 1]);
+      // queue.enqueue([x + 2, y - 1]);
     }
   }
 
   if (y - 2 <= 7) {
     if (x + 1 <= 7) {
-      // validMoves.push([x + 1, y - 2]);
-      queue.enqueue([x + 1, y - 2]);
+      validMoves.push([x + 1, y - 2]);
+      // queue.enqueue([x + 1, y - 2]);
     }
     if (x - 1 >= 0) {
-      // validMoves.push([x - 1, y - 2]);
-      queue.enqueue([x - 1, y - 2]);
+      validMoves.push([x - 1, y - 2]);
+      // queue.enqueue([x - 1, y - 2]);
     }
   }
 
   if (x - 2 >= 0) {
     if (y - 1 >= 0) {
-      // validMoves.push([x - 2, y - 1]);
-      queue.enqueue([x - 2, y - 1]);
+      validMoves.push([x - 2, y - 1]);
+      // queue.enqueue([x - 2, y - 1]);
     }
     if (y + 1 <= 7) {
-      // validMoves.push([x - 2, y + 1]);
-      queue.enqueue([x - 2, y + 1]);
+      validMoves.push([x - 2, y + 1]);
+      // queue.enqueue([x - 2, y + 1]);
     }
   }
 
-  // return validMoves;
-  return queue;
+  return validMoves;
+  // return queue;
 }
 
 export function getPositionsToAvoid(queue) {
@@ -61,17 +61,21 @@ export function getPositionsToAvoid(queue) {
 
 export function knightMoves(start, end, visited = [String(start)], avoid = []) {
   let movesQueue = getValidMoves(start);
-  avoid = [...avoid, ...getPositionsToAvoid(movesQueue)];
+  // avoid = [...avoid, ...getPositionsToAvoid(movesQueue)];
 
-  if (avoid.includes(end)) {
-    return end;
-  }
+  // if (avoid.includes(end)) {
+  //   return end;
+  // }
 
   let pathways = [];
 
   while (!movesQueue.isEmpty()) {
     let move = movesQueue.dequeue();
-    if (!visited.includes(String(move))) {
+    avoid = [...avoid, ...getPositionsToAvoid(movesQueue)];
+    if (avoid.includes(end)) {
+      return end;
+    }
+    if (!avoid.includes(String(move))) {
       let path = [];
       let visitedNew = [...visited, String(move)];
       // visited.push(String(move));
