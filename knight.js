@@ -28,7 +28,7 @@ export function getValidMoves(startVertex) {
     }
   }
 
-  if (y - 2 <= 7) {
+  if (y - 2 >= 0) {
     if (x + 1 <= 7) {
       validMoves.push([x + 1, y - 2]);
       // queue.enqueue([x + 1, y - 2]);
@@ -54,44 +54,61 @@ export function getValidMoves(startVertex) {
   // return queue;
 }
 
-export function getPositionsToAvoid(queue) {
+function getMovesQueue(validMoves, avoidList) {
+  let queue = new Queue();
+
+  validMoves.forEach((validMove) => {
+    if (!avoidList.includes(String(validMove))) {
+      queue.enqueue(validMove);
+    }
+  });
+
+  return queue;
+}
+
+// export function getPositionsToAvoid(queue) {
+//   let arr = Object.values(queue.items).map((item) => String(item));
+//   return arr;
+// }params
+
+// function getNextMoves(queue) {
+//   let arr = Object.values(queue.items).map((item) => String(item));
+//   return arr;
+// }
+
+function getArrItems(queue) {
   let arr = Object.values(queue.items).map((item) => String(item));
   return arr;
 }
 
-export function knightMoves(start, end, visited = [String(start)], avoid = []) {
-  let movesQueue = getValidMoves(start);
-  // avoid = [...avoid, ...getPositionsToAvoid(movesQueue)];
-
-  // if (avoid.includes(end)) {
-  //   return end;
-  // }
+export function knightMoves(start, end, skip = [String(start)]) {
+  if (skip.includes(String(end))) {
+    return end;
+  }
 
   let pathways = [];
 
+  let movesQueue = getMovesQueue(getValidMoves(start), skip);
+
   while (!movesQueue.isEmpty()) {
     let move = movesQueue.dequeue();
-    avoid = [...avoid, ...getPositionsToAvoid(movesQueue)];
-    if (avoid.includes(end)) {
-      return end;
-    }
-    if (!avoid.includes(String(move))) {
-      let path = [];
-      let visitedNew = [...visited, String(move)];
-      // visited.push(String(move));
-      path.push(move);
-      if (move[0] === end[0] && move[1] === end[1]) {
-        return path;
-      }
-      let nextMove = knightMoves(move, end, visitedNew, avoid);
-      if (nextMove) {
-        pathways.push([...path, ...nextMove]);
-      }
-      // visited = [String(move)];
+
+    let path = [];
+
+    path.push(start);
+
+    let skipList = [...skip, ...[String(move)], ...getArrItems(movesQueue)];
+
+    let nextPath = knightMoves(move, end, skipList);
+
+    if (nextPath) {
+      path.push(nextPath);
+      pathways.push(path);
     }
   }
-  let shortestPath;
+
   if (pathways.length) {
+    let shortestPath;
     shortestPath = pathways.reduce((acc, curr) => {
       if (acc.length <= curr.length) {
         return acc;
@@ -99,8 +116,45 @@ export function knightMoves(start, end, visited = [String(start)], avoid = []) {
         return curr;
       }
     });
-  }
 
-  return shortestPath;
-  // return visited;
+    return shortestPath;
+  }
 }
+
+// export function knightMoves(start, end, visited = [String(start)], avoid = []) {
+//   let movesQueue = getMovesQueue(getValidMoves(start), avoid);
+
+//   let pathways = [];
+
+//   while (!movesQueue.isEmpty()) {
+//     let move = movesQueue.dequeue();
+//     let avoidNew = [...avoid, ...getPositionsToAvoid(movesQueue)];
+//     if (avoidNew.includes(end)) {
+//       return end;
+//     }
+//     if (!avoidNew.includes(String(move))) {
+//       let path = [];
+//       let visitedNew = [...visited, String(move)];
+//       path.push(move);
+//       if (move[0] === end[0] && move[1] === end[1]) {
+//         return path;
+//       }
+//       let nextMove = knightMoves(move, end, visitedNew, avoidNew);
+//       if (nextMove) {
+//         pathways.push([...path, ...nextMove]);
+//       }
+//     }
+//   }
+//   let shortestPath;
+//   if (pathways.length) {
+//     shortestPath = pathways.reduce((acc, curr) => {
+//       if (acc.length <= curr.length) {
+//         return acc;
+//       } else {
+//         return curr;
+//       }
+//     });
+//   }
+
+//   return shortestPath;
+// }
