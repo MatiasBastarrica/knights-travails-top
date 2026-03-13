@@ -54,13 +54,23 @@ export function getValidMoves(startVertex) {
   return queue;
 }
 
-export function knightMoves(start, end, visited = []) {
-  let validMoves = getValidMoves(start);
+export function getPositionsToAvoid(queue) {
+  let arr = Object.values(queue.items).map((item) => String(item));
+  return arr;
+}
+
+export function knightMoves(start, end, visited = [String(start)], avoid = []) {
+  let movesQueue = getValidMoves(start);
+  avoid = [...avoid, ...getPositionsToAvoid(movesQueue)];
+
+  if (avoid.includes(end)) {
+    return end;
+  }
 
   let pathways = [];
 
-  while (!validMoves.isEmpty()) {
-    let move = validMoves.dequeue();
+  while (!movesQueue.isEmpty()) {
+    let move = movesQueue.dequeue();
     if (!visited.includes(String(move))) {
       let path = [];
       let visitedNew = [...visited, String(move)];
@@ -69,7 +79,7 @@ export function knightMoves(start, end, visited = []) {
       if (move[0] === end[0] && move[1] === end[1]) {
         return path;
       }
-      let nextMove = knightMoves(move, end, visitedNew);
+      let nextMove = knightMoves(move, end, visitedNew, avoid);
       if (nextMove) {
         pathways.push([...path, ...nextMove]);
       }
