@@ -6,6 +6,17 @@ export function getValidMoves(startVertex) {
   let x = startVertex[0];
   let y = startVertex[1];
 
+  if (y + 2 <= 7) {
+    if (x - 1 >= 0) {
+      // validMoves.push([x - 1, y + 2]);
+      queue.enqueue([x - 1, y + 2]);
+    }
+    if (x + 1 <= 7) {
+      // validMoves.push([x + 1, y + 2]);
+      queue.enqueue([x + 1, y + 2]);
+    }
+  }
+
   if (x + 2 <= 7) {
     if (y + 1 <= 7) {
       // validMoves.push([x + 2, y + 1]);
@@ -14,28 +25,6 @@ export function getValidMoves(startVertex) {
     if (y - 1 >= 0) {
       // validMoves.push([x + 2, y - 1]);
       queue.enqueue([x + 2, y - 1]);
-    }
-  }
-
-  if (x - 2 >= 0) {
-    if (y + 1 <= 7) {
-      // validMoves.push([x - 2, y + 1]);
-      queue.enqueue([x - 2, y + 1]);
-    }
-    if (y - 1 >= 0) {
-      // validMoves.push([x - 2, y - 1]);
-      queue.enqueue([x - 2, y - 1]);
-    }
-  }
-
-  if (y + 2 <= 7) {
-    if (x + 1 <= 7) {
-      // validMoves.push([x + 1, y + 2]);
-      queue.enqueue([x + 1, y + 2]);
-    }
-    if (x - 1 >= 0) {
-      // validMoves.push([x - 1, y + 2]);
-      queue.enqueue([x - 1, y + 2]);
     }
   }
 
@@ -50,6 +39,17 @@ export function getValidMoves(startVertex) {
     }
   }
 
+  if (x - 2 >= 0) {
+    if (y - 1 >= 0) {
+      // validMoves.push([x - 2, y - 1]);
+      queue.enqueue([x - 2, y - 1]);
+    }
+    if (y + 1 <= 7) {
+      // validMoves.push([x - 2, y + 1]);
+      queue.enqueue([x - 2, y + 1]);
+    }
+  }
+
   // return validMoves;
   return queue;
 }
@@ -57,31 +57,36 @@ export function getValidMoves(startVertex) {
 export function knightMoves(start, end, visited = []) {
   let validMoves = getValidMoves(start);
 
-  let paths = [];
-
-  // if (start[0] === end[0] && start[1] === end[1]) {
-  //   visited.push(start);
-  //   return visited;
-  // }
+  let pathways = [];
 
   while (!validMoves.isEmpty()) {
     let move = validMoves.dequeue();
     if (!visited.includes(String(move))) {
       let path = [];
-      // paths.push(path);
-      visited.push(String(move));
+      let visitedNew = [...visited, String(move)];
+      // visited.push(String(move));
       path.push(move);
       if (move[0] === end[0] && move[1] === end[1]) {
         return path;
       }
-      let nextMoves = knightMoves(move, end, visited);
-      path = [...path, ...nextMoves];
-      // paths.push(path);
-      // visited = [];
-      return path;
+      let nextMove = knightMoves(move, end, visitedNew);
+      if (nextMove) {
+        pathways.push([...path, ...nextMove]);
+      }
+      // visited = [String(move)];
     }
   }
+  let shortestPath;
+  if (pathways.length) {
+    shortestPath = pathways.reduce((acc, curr) => {
+      if (acc.length <= curr.length) {
+        return acc;
+      } else {
+        return curr;
+      }
+    });
+  }
 
-  return paths;
+  return shortestPath;
   // return visited;
 }
